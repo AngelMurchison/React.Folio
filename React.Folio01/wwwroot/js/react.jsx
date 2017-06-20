@@ -11,50 +11,69 @@ var BlogPost = React.createClass({
 
 var Blog = React.createClass({
     getInitialState: function () {
-        return { posts: [] };
+        return {
+            posts: [],
+            user: ""
+        };
     },
-    // ACCESS-CONTROL-ALLOW-ORIGIN IS BUSTED, which token am i supposed to use?!?!?!?
-    // host, accept-charset, origin are restricted headers (the browser handles those mandatorily)
-    //componentWillMount: function () {
-    //    let xhr = new XMLHttpRequest();
-    //    let token = "2edc30d0dbb4cbd4272c9d16968c300c4876ffae0375e0f804dd699a7a40ddee2"
-    //    xhr.open('get', this.props.url, true);
-    //    xhr.setRequestHeader("Access-Control-Allow-Headers", "Authorization")
-    //    xhr.setRequestHeader("Authorization", "Bearer " + token)
-    //    xhr.setRequestHeader("Content-Type", "application/json")
-    //    xhr.setRequestHeader("Accept", "application/json")
-    //    xhr.onload = function () {
-    //        let posts = JSON.parse(xhr.responseText);
-    //        this.setState({ posts: posts });
-    //    }.bind(this);
-    //    xhr.send();
-    //},
 
-    componentWillMount: function () {
-      
+    componentDidMount: function () {
         var xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
+        xhr.overrideMimeType("application/xml")
+        xhr.open('get', this.props.url, true);
+        xhr.setRequestHeader("Content-Type", "application/xml")
 
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-                console.log(this.responseText);
-            }
-        });
-
-        xhr.open("GET", "https://api.medium.com/v1/me,", true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.setRequestHeader("Accept", "application/json");
-        xhr.setRequestHeader("Authorization", "Bearer 218d7a2948fa55fe0864bc2e48fe416c269447336ee5910b4f57243c9b8eb2da9");
-        xhr.setRequestHeader("Cache-Control", "no-cache");
-
-        console.log(xhr.ge)
-
+        xhr.onload = function () {
+            let parser = new DOMParser();
+            let posts = xhr.response;
+            posts = parser.parseFromString(posts, "application/xml");
+            this.setState({ posts: posts.firstChild.firstChild.childNodes });
+            // stories: .firstchild.firstchild.childnodes 11-15
+        }.bind(this);
         xhr.send();
     },
+
+    // test this on medium stories
+    formatter: function () {
+        var XML = "<thisXML>is annoying as fuck</thisXML>"
+
+        // collect all tags,
+        var regEx = /<.+?>/g;
+        var match = []
+        var matches = {}
+
+        while ((match = regEx.exec(XML)) !== null) {
+            var msg = 'Found ' + match[0] + '. ';
+            msg += 'This match ends at ' + regEx.lastIndex, 'and is' + regEx.length + 'characters long.';
+            console.log(msg);
+        }        
+
+        // iterate through the string for each attrName and collect open and close
+        // convert all tags,
+        // create queries for each open and close tags
+        // execute queries
+
+        // <thisXML>, </thisXML>
+        var openTagToReplace = XML.substring(XML.indexOf("<"), XML.indexOf(">") + 1)
+        var closeTagToReplace = openTagToReplace.replace("<", "</")
+        // thisXML
+        var attrNameToReplace = XML.substr(1, openTagToReplace.length - 2)
+
+        XML = XML.replace(openTagToReplace, "<h1>").replace(closeTagToReplace, "</h1>")
+    },
+
+    //rawMarkup: function () {
+    //    var md = new Remarkable();
+    //    var rawMarkup = md.render(this.state.posts);
+    //    return { __html: rawMarkup };
+    //},
+    //<span dangerouslySetInnerHTML={this.rawMarkup()} />
+
     render: function () {
+        this.formatter()
         return (
             <div className="blog-container">
-                This is the blog container.
+                <span>{this.state.posts}</span>
             </div>
         );
     }
@@ -75,7 +94,7 @@ var Portfolio = React.createClass({
     render: function () {
         return (
             <div className="portfolio-container">
-                <img classID="portrait" src="/images/angel.jpg" length="2" width="2"  />
+                <img classID="portrait" src="/images/angel.jpg" length="2" width="2" />
                 <p classID="mini-bio">
                     Hi, my name is Angel Murchison. I am a software developer living in Tampa - St. Pete, Florida.
                 </p>
@@ -89,7 +108,7 @@ var App = React.createClass({
         return (
             <div>
                 <Portfolio />
-                <Blog url="https://api.medium.com/v1/me"/>
+                <Blog url="http://localhost:44329/api/medium" />
             </div>
         );
     }
