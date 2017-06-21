@@ -36,17 +36,23 @@ var Blog = React.createClass({
     // test this on medium stories
     formatter: function () {
         var XML = "<thisXML>is annoying as fuck</thisXML>"
+        var newHTML = ""
 
         // collect all tags,
         var regEx = /<.+?>/g;
-        var match = []
-        var matches = {}
+        var regExProps = []
+        var matches = []
 
-        while ((match = regEx.exec(XML)) !== null) {
-            var msg = 'Found ' + match[0] + '. ';
-            msg += 'This match ends at ' + regEx.lastIndex, 'and is' + regEx.length + 'characters long.';
+        while ((regExProps = regEx.exec(XML)) !== null) {
+            var msg = 'Found ' + regExProps[0] + '. ';
+            msg += 'This match ends at ' + regEx.lastIndex, 'and is' + regExProps.length + 'characters long.';
             console.log(msg);
-        }        
+            XML.replace(regEx, () => {
+                if (regExProps[0].includes('/')) { return '</h1>' }
+                else { return '<h1>' }
+            })
+            console.log(newHTML)
+        }     
 
         // iterate through the string for each attrName and collect open and close
         // convert all tags,
