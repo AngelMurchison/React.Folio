@@ -46,7 +46,7 @@ var Blog = React.createClass({
         // iterate through the string for each attrName and collect open and close
         while ((regExProps = regEx.exec(XML)) !== null) {
             var msg = 'Found ' + regExProps[0] + '. ';
-            msg += 'This match ends at ' + regEx.lastIndex, 'and is' + regExProps.length + 'characters long.';
+            msg += 'This match ends at ' + regEx.lastIndex + 'and is' + regExProps.length + 'characters long.';
             console.log(msg);
             // convert all tags,
             XML.replace(regEx, () => {
