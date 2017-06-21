@@ -28,7 +28,7 @@ var Blog = React.createClass({
             let posts = xhr.response;
             posts = parser.parseFromString(posts, "application/xml");
             this.setState({ posts: posts.firstChild.firstChild.childNodes });
-            // stories: .firstchild.firstchild.childnodes 11-15
+            // stories: .firstchild.firstchild.childnodes 9-15
         }.bind(this);
         xhr.send();
     },
@@ -43,10 +43,12 @@ var Blog = React.createClass({
         var regExProps = []
         var matches = []
 
+        // iterate through the string for each attrName and collect open and close
         while ((regExProps = regEx.exec(XML)) !== null) {
             var msg = 'Found ' + regExProps[0] + '. ';
             msg += 'This match ends at ' + regEx.lastIndex, 'and is' + regExProps.length + 'characters long.';
             console.log(msg);
+            // convert all tags,
             XML.replace(regEx, () => {
                 if (regExProps[0].includes('/')) { return '</h1>' }
                 else { return '<h1>' }
@@ -54,12 +56,6 @@ var Blog = React.createClass({
             console.log(newHTML)
         }     
 
-        // iterate through the string for each attrName and collect open and close
-        // convert all tags,
-        // create queries for each open and close tags
-        // execute queries
-
-        // <thisXML>, </thisXML>
         var openTagToReplace = XML.substring(XML.indexOf("<"), XML.indexOf(">") + 1)
         var closeTagToReplace = openTagToReplace.replace("<", "</")
         // thisXML
@@ -67,13 +63,6 @@ var Blog = React.createClass({
 
         XML = XML.replace(openTagToReplace, "<h1>").replace(closeTagToReplace, "</h1>")
     },
-
-    //rawMarkup: function () {
-    //    var md = new Remarkable();
-    //    var rawMarkup = md.render(this.state.posts);
-    //    return { __html: rawMarkup };
-    //},
-    //<span dangerouslySetInnerHTML={this.rawMarkup()} />
 
     render: function () {
         this.formatter()
