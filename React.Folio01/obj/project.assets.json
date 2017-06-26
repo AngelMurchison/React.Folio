@@ -10273,15 +10273,15 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\wmurc\\.nuget\\packages\\": {}
+    "C:\\Users\\Angel Murchison\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\wmurc\\Documents\\Visual Studio 2017\\Projects\\React.Folio\\React.Folio01\\React.Folio01.csproj",
+      "projectUniqueName": "C:\\Users\\Angel Murchison\\Documents\\Visual Studio 2017\\Projects\\React.Folio01\\React.Folio01\\React.Folio01.csproj",
       "projectName": "React.Folio01",
-      "projectPath": "C:\\Users\\wmurc\\Documents\\Visual Studio 2017\\Projects\\React.Folio\\React.Folio01\\React.Folio01.csproj",
-      "outputPath": "C:\\Users\\wmurc\\Documents\\Visual Studio 2017\\Projects\\React.Folio\\React.Folio01\\obj\\",
+      "projectPath": "C:\\Users\\Angel Murchison\\Documents\\Visual Studio 2017\\Projects\\React.Folio01\\React.Folio01\\React.Folio01.csproj",
+      "outputPath": "C:\\Users\\Angel Murchison\\Documents\\Visual Studio 2017\\Projects\\React.Folio01\\React.Folio01\\obj\\",
       "projectStyle": "PackageReference",
       "originalTargetFrameworks": [
         "net46"

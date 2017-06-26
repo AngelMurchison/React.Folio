@@ -10,12 +10,11 @@ var BlogPost = React.createClass({
         );
     }
 });
-
+// TODO: Create individual blogs to BlogPost component.
 var Blog = React.createClass({
     getInitialState: function () {
         return {
-            posts: "",
-            user: ""
+            posts: ""
         };
     },
     // The request from Medium is made server-side, then the client requests from the server (CORS error forced this wonky solution)
@@ -36,33 +35,46 @@ var Blog = React.createClass({
         }.bind(this);
         xhr.send();
     },
-    // TODO: Iterator is only collecting first blog.
+
+    // Storing our Medium posts in a more useful HTML element.
+    collector: function () {
+        let blogMarkup = document.createElement("div")
+        let childNodes = this.state.posts.firstChild.firstChild
+
+        for (var i = 9; i < childNodes.children.length; i++) {
+            blogMarkup.appendChild(childNodes.children[i].lastChild)
+        }
+        return blogMarkup
+    },
+
     // Our iterator collects the appropriate text from the XMLDocument object and encodes it into HTML with dangerouslySetInnerHTML. (:
     iterator: function () {
         var createMarkup = (html) => {
             return { __html: html }
         }
-        for (var i = 9; i < this.state.posts.firstChild.firstChild.children.length; i++) {
-            return (
-                <span>
-                    <div dangerouslySetInnerHTML={createMarkup(this.state.posts.firstChild.firstChild.children[i].lastChild.innerHTML)} />
-                    <span> --------------</span>
-                    <span> --------------</span>
-                </span>
-            );
+        let finalMarkup = this.collector()
+        let encodedMarkup = []
+        for (var i = 0; i < finalMarkup.children.length; i++) {
+            if (finalMarkup.children[i].textContent.startsWith("<p>") == false) {
+                encodedMarkup.push(<div key={i} className="mediumPost" dangerouslySetInnerHTML={createMarkup(finalMarkup.children[i].innerHTML)} />)
+            }
         }
+        return encodedMarkup
     },
 
     render: function () {
         if (this.state.posts !== "") {
+            var iterator = this.iterator()
             return (
                 <div>
-                    {this.iterator()}
+                    {iterator}
                 </div>
             );
         }
         else {
-            return <span>No blogs found</span>
+            return (
+                <span>No blogs found</span>
+            );
         }
     }
 });
