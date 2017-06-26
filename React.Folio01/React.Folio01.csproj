@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\js\encoder.js" />
     <Content Include="wwwroot\js\react.jsx" />
     <Content Include="wwwroot\js\tutorial.jsx" />
   </ItemGroup>

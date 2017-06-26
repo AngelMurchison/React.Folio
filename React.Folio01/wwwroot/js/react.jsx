@@ -9,10 +9,16 @@ var BlogPost = React.createClass({
     }
 });
 
+var replacer = (match) => {
+    console.log("Replaced: " + match)
+    if (match.includes('/')) { return '</h4>' }
+    else { return '<h4> ' }
+}
+
 var Blog = React.createClass({
     getInitialState: function () {
         return {
-            posts: [],
+            posts: "",
             user: ""
         };
     },
@@ -27,8 +33,9 @@ var Blog = React.createClass({
             let parser = new DOMParser();
             let posts = xhr.response;
             posts = parser.parseFromString(posts, "application/xml");
-            this.setState({ posts: posts.firstChild.firstChild.childNodes });
+            this.setState({ posts: posts.firstChild.firstChild.children[9].children[11] });
             // stories: .firstchild.firstchild.childnodes 9-15
+            // specific encoded: .posts.firstChild.firstChild.children[9].children[11]
         }.bind(this);
         xhr.send();
     },
@@ -47,37 +54,36 @@ var Blog = React.createClass({
         while ((regExProps = regEx.exec(XML)) !== null) {
             var msg = 'Found ' + regExProps[0] + '. ';
             msg += 'This match ends at ' + regEx.lastIndex + 'and is' + regExProps.length + 'characters long.';
-            console.log(msg);
-            // convert all tags,
-            XML.replace(regEx, () => {
-                if (regExProps[0].includes('/')) { return '</h1>' }
-                else { return '<h1>' }
-            })
-            console.log(newHTML)
-        }     
+            console.log("Message: " + msg);
+        }
+        // convert all tags,
+        XML = XML.replace(regEx, replacer)
+        console.log("Final: " + XML)
 
         var openTagToReplace = XML.substring(XML.indexOf("<"), XML.indexOf(">") + 1)
         var closeTagToReplace = openTagToReplace.replace("<", "</")
         // thisXML
         var attrNameToReplace = XML.substr(1, openTagToReplace.length - 2)
+    },
 
-        XML = XML.replace(openTagToReplace, "<h1>").replace(closeTagToReplace, "</h1>")
+    output: function () {
+        for (var post in this.state.posts) {
+            return <span> {post} </span>
+        }
     },
 
     render: function () {
-        this.formatter()
-        return (
-            <div className="blog-container">
-                <span>{this.state.posts}</span>
-            </div>
-        );
+        <div classname="blog-container">
+            <span>{this.state.posts}</span>
+        </div>
     }
 });
 
 var PortfolioItem = React.createClass({
     render: function () {
         return (
-            <div></div>
+            <div>
+            </div>
         );
     }
 });
