@@ -12,26 +12,13 @@ var BlogPost = React.createClass({
 });
 
 var Blog = React.createClass({
-        //iterator: function () {
-    //    var createMarkup = (html) => {
-    //        return { __html: html }
-    //    }
-    //    var blogList = [{ key: "" }]
-    //    for (var i = 9; i < 16; i++) {
-    //        blogList.push({ i: <div dangerouslySetInnerHTML={createMarkup(this.state.posts.firstChild.firstChild.children[i].lastChild.innerHTML)} /> })
-    //    }
-    //    return (
-    //        blogList
-    //    );
-    //},
-
     getInitialState: function () {
         return {
             posts: "",
             user: ""
         };
     },
-
+    // The request from Medium is made server-side, then the client requests from the server (CORS error forced this wonky solution)
     componentDidMount: function () {
         var xhr = new XMLHttpRequest();
         xhr.overrideMimeType("application/xml")
@@ -41,6 +28,7 @@ var Blog = React.createClass({
             let parser = new DOMParser();
             XMLposts = xhr.response;
             XMLposts = parser.parseFromString(XMLposts, "application/xml");
+            // State is set to the XMLDocument Object our request returned.
             this.setState({ posts: XMLposts });
             if (this.state.posts !== XMLposts) {
                 console.log("Set state unsuccessful.")
@@ -49,6 +37,7 @@ var Blog = React.createClass({
         xhr.send();
     },
     // TODO: Iterator is only collecting first blog.
+    // Our iterator collects the appropriate text from the XMLDocument object and encodes it into HTML with dangerouslySetInnerHTML. (:
     iterator: function () {
         var createMarkup = (html) => {
             return { __html: html }
@@ -140,3 +129,15 @@ ReactDOM.render(
         //         <img src="https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=7af459d0cdc4" width="1" height="1" />
         //</div>
         //);
+        //iterator: function () {
+    //    var createMarkup = (html) => {
+    //        return { __html: html }
+    //    }
+    //    var blogList = [{ key: "" }]
+    //    for (var i = 9; i < 16; i++) {
+    //        blogList.push({ i: <div dangerouslySetInnerHTML={createMarkup(this.state.posts.firstChild.firstChild.children[i].lastChild.innerHTML)} /> })
+    //    }
+    //    return (
+    //        blogList
+    //    );
+    //},
